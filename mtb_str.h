@@ -11,7 +11,7 @@ extern "C" {
 
 char *mtbs_new(char *);
 char *mtbs_join(int, char *, ...);
-void mtbs_concat(int, char *, ...);
+void mtbs_concat(int, char **, ...);
 char *mtbs_substr(char *, int, int);
 char **mtbs_split(char *, int *, char *);
 void mtbs_free_split(char **, int);
@@ -72,14 +72,14 @@ char *mtbs_join(int n, char *_self, ...) {
     return ret;
 }
 
-void mtbs_concat(int n, char *_self, ...) {
+void mtbs_concat(int n, char **_self, ...) {
     if(!_self)
         return;
 
     va_list vl;
     int t;
     unsigned int i;
-    int self_len = strlen(_self);
+    int self_len = strlen(*_self);
 
     /* n gets reduced in 1 because _self is not counted on loop */
     n--;
@@ -94,17 +94,17 @@ void mtbs_concat(int n, char *_self, ...) {
             continue;
         int arg_len = strlen(_str);
 
-        _self = (char *) realloc (_self,
+        *_self = (char *) realloc (*_self,
                 sizeof(char)*(self_len+arg_len+1));
 
         /* Concatenate each char of argument on self */
         for(i = 0; i < arg_len; i++)
-            _self[self_len+i] = _str[i];
+            (*_self)[self_len+i] = _str[i];
         self_len += arg_len;
     }
     /* Append '\0' and end va_list */
     va_end(vl);
-    _self[self_len] = '\0';
+    (*_self)[self_len] = '\0';
 }
 
 char *mtbs_substr(char *_self, int begin, int end) {
