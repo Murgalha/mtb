@@ -164,6 +164,9 @@ char **mtbs_split(char *_self, int *nstrings, char *delims) {
                             sizeof(char *)*((*nstrings)+1));
                     allstrings[(*nstrings)++] = aux;
                 }
+				else {
+					free(aux);
+				}
 
                 /* Prepare to repeat */
                 aux = NULL;
